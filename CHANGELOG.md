@@ -1,5 +1,10 @@
 # Version History
 
+## 0.0.2.0
+
+* Downgrade compile depends to cython==0.29.33
+* Make wheels for python 3.10 and 3.11 only
+
 ## 0.0.1.9
 
 * Update depends setuptools>=80.9.0
