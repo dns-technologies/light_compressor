@@ -1,6 +1,5 @@
 """Quick stream reader from compress file objects."""
 
-from _compression import DecompressReader
 from io import BufferedReader
 
 from .compressor_method import (
@@ -8,6 +7,7 @@ from .compressor_method import (
     CompressionMethod,
 )
 from .decompressors import (
+    DecompressReader,
     LZ4Decompressor,
     ZSTDDecompressor,
 )

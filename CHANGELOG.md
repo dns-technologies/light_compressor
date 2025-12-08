@@ -5,6 +5,7 @@
 * Update depends latest setuptools
 * Make wheels for python 3.10-3.14
 * Add tests for python 3.14
+* Make custom DecompressReader class
 
 ## 0.0.2.0
 

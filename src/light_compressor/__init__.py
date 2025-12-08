@@ -9,6 +9,7 @@ from .compressors import (
     ZSTDCompressor,
 )
 from .decompressors import (
+    DecompressReader,
     LZ4Decompressor,
     ZSTDDecompressor,
 )
@@ -20,6 +21,7 @@ __all__ = (
     "auto_detector",
     "define_reader",
     "define_writer",
+    "DecompressReader",
     "CompressionMethod",
     "LZ4Compressor",
     "LZ4Decompressor",
