@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "light_compressor"
-version = "0.0.2.1"
+version = "0.0.2.2"
 description = "Library for read compressed stream and write compressed chunks."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -29,7 +29,7 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://github.com/0xMihalich/light_compressor"
-Documentation = "https://github.com/0xMihalich/light_compressor#readme"
+Documentation = "https://0xmihalich.github.io/dbhose_airflow/base_modules/light_compressor/index.html"
 Repository = "https://github.com/0xMihalich/light_compressor"
 Changelog = "https://github.com/0xMihalich/light_compressor/blob/main/CHANGELOG.md"
 

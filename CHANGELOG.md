@@ -1,5 +1,9 @@
 # Version History
 
+## 0.0.2.2
+
+* Change documentation link
+
 ## 0.0.2.1
 
 * Update depends latest setuptools
