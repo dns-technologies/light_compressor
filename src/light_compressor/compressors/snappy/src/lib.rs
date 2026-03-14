@@ -26,7 +26,7 @@ impl CompressionIter {
         slf
     }
 
-    fn __next__(mut slf: PyRefMut<'_, Self>, py: Python<'_>) -> PyResult<Option<PyObject>> {
+    fn __next__(mut slf: PyRefMut<'_, Self>, py: Python<'_>) -> PyResult<Option<Py<PyBytes>>> {
         if slf.index < slf.chunks.len() {
             let chunk = PyBytes::new(py, &slf.chunks[slf.index]);
             slf.index += 1;
@@ -52,7 +52,7 @@ impl SNAPPYCompressor {
     fn send_chunks(
         &mut self,
         py: Python<'_>,
-        bytes_data: &PyList,
+        bytes_data: &Bound<'_, PyList>,
     ) -> PyResult<Py<CompressionIter>> {
         self.decompressed_size = 0;
         self.buffer.clear();
@@ -60,6 +60,7 @@ impl SNAPPYCompressor {
         let mut compressed_chunks = Vec::new();
         let mut total_size = 0;
 
+        // В PyO3 0.26.0 итератор возвращает Bound<'_, PyAny> напрямую, без Result
         for item in bytes_data.iter() {
             let data: Vec<u8> = item.extract()?;
             total_size += data.len();
@@ -70,6 +71,7 @@ impl SNAPPYCompressor {
             }
         }
 
+        // Компрессия
         for item in bytes_data.iter() {
             let data: Vec<u8> = item.extract()?;
             self.decompressed_size += data.len() as u64;
@@ -100,6 +102,7 @@ impl SNAPPYCompressor {
             }
         }
 
+        // Сжимаем остаток
         if !self.buffer.is_empty() {
             if let Err(e) = self.encoder.write_all(&self.buffer) {
                 return Err(PyErr::new::<pyo3::exceptions::PyRuntimeError, _>(
@@ -142,7 +145,7 @@ impl SNAPPYCompressor {
 }
 
 #[pymodule]
-fn snappy(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
+fn snappy(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<SNAPPYCompressor>()?;
     Ok(())
 }

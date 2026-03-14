@@ -34,9 +34,9 @@ impl SNAPPYDecompressor {
 
     fn __exit__(
         mut slf: PyRefMut<'_, Self>,
-        _exc_type: Option<&PyAny>,
-        _exc_value: Option<&PyAny>,
-        _traceback: Option<&PyAny>,
+        _exc_type: Option<&Bound<'_, PyAny>>,
+        _exc_value: Option<&Bound<'_, PyAny>>,
+        _traceback: Option<&Bound<'_, PyAny>>,
     ) {
         slf.reset();
     }
@@ -53,7 +53,7 @@ impl SNAPPYDecompressor {
     fn decompress(
         &mut self,
         py: Python<'_>,
-        data: &PyAny,
+        data: &Bound<'_, PyAny>,
         max_length: Option<i64>,
     ) -> PyResult<Py<PyBytes>> {
         let input_bytes = if data.is_instance_of::<PyBytes>() || data.is_instance_of::<PyByteArray>() {
@@ -98,7 +98,6 @@ impl SNAPPYDecompressor {
 
         let mut result = Vec::new();
         let mut temp_buf = [0u8; 8192];
-        let mut total_read = 0;
 
         while result.len() < max_out {
             let to_read = std::cmp::min(temp_buf.len(), max_out - result.len());
@@ -116,7 +115,6 @@ impl SNAPPYDecompressor {
                 }
                 Ok(n) => {
                     result.extend_from_slice(&temp_buf[..n]);
-                    total_read += n;
 
                     if n < to_read {
                         self.eof = true;
@@ -124,7 +122,7 @@ impl SNAPPYDecompressor {
                         break;
                     }
                 }
-                Err(e) => {
+                Err(_) => {
                     self.eof = true;
                     self.needs_input = false;
                     break;
@@ -157,7 +155,7 @@ impl SNAPPYDecompressor {
 }
 
 #[pymodule]
-fn snappy(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
+fn snappy(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<SNAPPYDecompressor>()?;
     Ok(())
 }
