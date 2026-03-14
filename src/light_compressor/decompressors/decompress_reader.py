@@ -16,6 +16,7 @@ from typing import (
 if TYPE_CHECKING:
     from .gzip import GZIPDecompressor
     from .lz4 import LZ4Decompressor
+    from .snappy import SNAPPYDecompressor
     from .zstd import ZSTDDecompressor
 
 
@@ -37,7 +38,8 @@ class DecompressReader(RawIOBase):
         self._decomp_factory = decomp_factory
         self._decomp_args = decomp_args
         self._decompressor: (
-            GZIPDecompressor | LZ4Decompressor | ZSTDDecompressor
+            GZIPDecompressor | LZ4Decompressor |
+            SNAPPYDecompressor | ZSTDDecompressor
         )= (
             self._decomp_factory(**self._decomp_args)
         )

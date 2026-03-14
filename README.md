@@ -6,7 +6,7 @@ After testing all available solutions, I found their speed unsatisfactory, so I 
 
 The stream reader use direct sequential reading from the stream with explicit size indication.
 This meets all requirements for my project.
-Supported compression formats: **LZ4** and **ZSTD** only.
+Supported compression formats: **GZIP**, **LZ4**, **SNAPPY** and **ZSTD**.
 
 ## Examples
 
@@ -20,7 +20,7 @@ compressor_method = auto_detector(fileobj)
 
 ### File reading
 
-When reading from files, automatic compression format detection is available (checks for LZ4/ZSTD signatures or no compression):
+When reading from files, automatic compression format detection is available (checks for GZIP/LZ4/SNAPPY/ZSTD signatures or no compression):
 
 ```python
 from light_compressor import define_reader
@@ -32,7 +32,9 @@ decompressed_stream = define_reader(fileobj)
 
 ```python
 from light_compressor import (
+    GZIPCompressor,
     LZ4Compressor,
+    SNAPPYCompressor,
     ZSTDCompressor,
 )
 # some data in bytes
@@ -94,5 +96,5 @@ pip install .
 From git
 
 ```bash
-pip install git+https://github.com/0xMihalich/light_compressor
+pip install git+https://github.com/dns-technologies/light_compressor
 ```

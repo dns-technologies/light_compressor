@@ -1,5 +1,18 @@
 # Version History
 
+## 0.1.0.dev1
+
+* Developer release (not public to pip)
+* Add SNAPPYCompressor
+* Add SNAPPYDecompressor
+* Refactor GZIPDecompressor
+* Improve misprints inialization -> initialization
+* Rename tests_all -> test_gzip_lz4_zstd.py
+* Add tests for snappy test_snappy.py
+* Update .gitignore
+* Update github links
+* Update README.md
+
 ## 0.1.0.dev0
 
 * Developer release (not public to pip)

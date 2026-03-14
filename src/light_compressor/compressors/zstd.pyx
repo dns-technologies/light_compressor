@@ -11,7 +11,7 @@ cdef class ZSTDCompressor:
         self,
         short compression_level = 3,
     ):
-        """Class inialization."""
+        """Class initialization."""
 
         self.context = lib.ZSTD_createCCtx()
         self.compression_level = compression_level

@@ -1,14 +1,14 @@
 [build-system]
-requires = ["setuptools", "wheel", "Cython>=0.29.33"]
+requires = ["setuptools", "setuptools-rust", "wheel", "Cython>=0.29.33"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "light_compressor"
-version = "0.1.0.dev0"
+version = "0.1.0.dev1"
 description = "Library for read compressed stream and write compressed chunks."
 readme = "README.md"
 requires-python = ">=3.10"
-license = {file = "LICENSE"}
+license-files = ["LICENSE"]
 authors = [
     {name = "0xMihalich", email = "bayanmobile87@gmail.com"},
 ]
@@ -28,10 +28,10 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/0xMihalich/light_compressor"
-Documentation = "https://0xmihalich.github.io/dbhose_airflow/base_modules/light_compressor/index.html"
-Repository = "https://github.com/0xMihalich/light_compressor"
-Changelog = "https://github.com/0xMihalich/light_compressor/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/dns-technologies/light_compressor"
+Documentation = "https://dns-technologies.github.io/dbhose_airflow/base_modules/light_compressor/index.html"
+Repository = "https://github.com/dns-technologies/light_compressor"
+Changelog = "https://github.com/dns-technologies/light_compressor/blob/main/CHANGELOG.md"
 
 [tool.setuptools]
 packages = {find = {where = ["src"]}}

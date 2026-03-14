@@ -4,7 +4,7 @@ class ZSTDDecompressor:
     """ZSTD frame cython decompressor."""
 
     def __init__(self) -> None:
-        """Class inialization."""
+        """Class initialization."""
 
         self._dctx: object
         self.eof: bool

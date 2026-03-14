@@ -10,6 +10,7 @@ from .decompressors import (
     DecompressReader,
     GZIPDecompressor,
     LZ4Decompressor,
+    SNAPPYDecompressor,
     ZSTDDecompressor,
 )
 
@@ -30,6 +31,8 @@ def define_reader(
         decompressor = GZIPDecompressor
     elif compressor_method is CompressionMethod.LZ4:
         decompressor = LZ4Decompressor
+    elif compressor_method == CompressionMethod.SNAPPY:
+        decompressor = SNAPPYDecompressor
     elif compressor_method == CompressionMethod.ZSTD:
         decompressor = ZSTDDecompressor
     else:

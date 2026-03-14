@@ -10,7 +10,7 @@ cdef class LZ4Compressor:
     """LZ4 chunk compressor."""
 
     def __init__(self):
-        """Class inialization."""
+        """Class initialization."""
 
         self.context = create_compression_context()
         self.decompressed_size = 0

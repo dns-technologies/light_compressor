@@ -4,7 +4,7 @@ class LZ4Decompressor:
     """LZ4 frame cython decompressor."""
 
     def __init__(self) -> None:
-        """Class inialization."""
+        """Class initialization."""
 
         self._context: object
         self.eof: bool

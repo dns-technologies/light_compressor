@@ -7,7 +7,7 @@ cdef class GZIPDecompressor:
     def __init__(self):
         """Initialize the decompressor."""
 
-        self._decompressor = decompressobj(16 + 15)
+        self._decompressor = decompressobj(31)
         self.eof = False
         self.needs_input = True
         self.unused_data = b""
@@ -35,7 +35,7 @@ cdef class GZIPDecompressor:
     cpdef void reset(self):
         """Reset the decompressor state."""
 
-        self._decompressor = decompressobj(16 + 15)
+        self._decompressor = decompressobj(31)
         self.eof = False
         self.needs_input = True
         self.unused_data = b""

@@ -2,6 +2,7 @@ from setuptools import (
     Extension,
     setup,
 )
+from setuptools_rust import RustExtension
 from Cython.Build import cythonize
 
 
@@ -37,6 +38,18 @@ setup(
     name="light_compressor",
     package_dir={"": "src"},
     ext_modules=cythonize(extensions, language_level="3"),
+    rust_extensions=[
+        RustExtension(
+            "light_compressor.compressors.snappy",
+            path="src/light_compressor/compressors/snappy/Cargo.toml",
+            debug=False,
+        ),
+        RustExtension(
+            "light_compressor.decompressors.snappy",
+            path="src/light_compressor/decompressors/snappy/Cargo.toml",
+            debug=False,
+        ),
+    ],
     packages=[
         "light_compressor.decompressors",
     ],

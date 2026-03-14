@@ -5,6 +5,7 @@ from .compressor_method import CompressionMethod
 from .compressors import (
     GZIPCompressor,
     LZ4Compressor,
+    SNAPPYCompressor,
     ZSTDCompressor,
 )
 
@@ -22,6 +23,8 @@ def define_writer(
         compressor = GZIPCompressor()
     elif compressor_method is CompressionMethod.LZ4:
         compressor = LZ4Compressor()
+    elif compressor_method is CompressionMethod.SNAPPY:
+        compressor = SNAPPYCompressor()
     elif compressor_method is CompressionMethod.ZSTD:
         compressor = ZSTDCompressor()
     else:
