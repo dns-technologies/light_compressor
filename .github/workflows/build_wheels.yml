@@ -69,7 +69,8 @@ jobs:
 
     - name: Install Rust
       run: |
-        curl -sSf -o rustup-init.exe https://win.rustup.rs/
+        $ErrorActionPreference = "Stop"
+        Invoke-WebRequest -Uri "https://win.rustup.rs/" -OutFile "rustup-init.exe" -UseBasicParsing
         .\rustup-init.exe -y
         echo "$env:USERPROFILE\.cargo\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
       shell: powershell
@@ -82,7 +83,7 @@ jobs:
       env:
         CIBW_BUILD: "cp310-* cp311-* cp312-* cp313-* cp314-*"
         CIBW_ARCHS_WINDOWS: "AMD64"
-        CIBW_BEFORE_ALL: "curl -sSf -o rustup-init.exe https://win.rustup.rs/ && .\\rustup-init.exe -y && pip install cython>=0.29.33 setuptools wheel setuptools-rust -r requirements.txt"
+        CIBW_BEFORE_ALL: "powershell -Command \"Invoke-WebRequest -Uri 'https://win.rustup.rs/' -OutFile 'rustup-init.exe' -UseBasicParsing\" && .\\rustup-init.exe -y && pip install cython>=0.29.33 setuptools wheel setuptools-rust -r requirements.txt"
         CIBW_SKIP: "*-win32"
         RUST_BACKTRACE: 1
 
@@ -91,7 +92,6 @@ jobs:
       with:
         name: windows-wheels
         path: wheel_prebuild/*.whl
-
   build_macos:
     name: Build macOS wheels
     runs-on: macos-latest
