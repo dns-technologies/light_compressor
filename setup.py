@@ -7,12 +7,20 @@ from Cython.Build import cythonize
 
 extensions = [
     Extension(
+        "light_compressor.compressors.gzip",
+        ["src/light_compressor/compressors/gzip.pyx"],
+    ),
+    Extension(
         "light_compressor.compressors.lz4",
         ["src/light_compressor/compressors/lz4.pyx"],
     ),
     Extension(
         "light_compressor.compressors.zstd",
         ["src/light_compressor/compressors/zstd.pyx"],
+    ),
+    Extension(
+        "light_compressor.decompressors.gzip",
+        ["src/light_compressor/decompressors/gzip.pyx"],
     ),
     Extension(
         "light_compressor.decompressors.lz4",

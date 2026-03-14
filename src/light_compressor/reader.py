@@ -8,6 +8,7 @@ from .compressor_method import (
 )
 from .decompressors import (
     DecompressReader,
+    GZIPDecompressor,
     LZ4Decompressor,
     ZSTDDecompressor,
 )
@@ -25,7 +26,9 @@ def define_reader(
     if compressor_method is CompressionMethod.NONE:
         return fileobj
 
-    if compressor_method is CompressionMethod.LZ4:
+    if compressor_method is CompressionMethod.GZIP:
+        decompressor = GZIPDecompressor
+    elif compressor_method is CompressionMethod.LZ4:
         decompressor = LZ4Decompressor
     elif compressor_method == CompressionMethod.ZSTD:
         decompressor = ZSTDDecompressor

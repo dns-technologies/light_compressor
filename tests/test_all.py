@@ -7,6 +7,7 @@ from light_compressor import (
     define_reader,
     define_writer,
     CompressionMethod,
+    GZIPCompressor,
     LZ4Compressor,
     ZSTDCompressor,
 )
@@ -32,6 +33,7 @@ def decompress(compression_method: CompressionMethod) -> None:
 def test_file() -> None:
 
     for compression_method in (
+        CompressionMethod.GZIP,
         CompressionMethod.LZ4,
         CompressionMethod.ZSTD,
     ):
@@ -40,7 +42,9 @@ def test_file() -> None:
         full_data = b"".join(bytes_data)
         decompressed_size = len(full_data)
 
-        if compression_method == CompressionMethod.LZ4:
+        if compression_method == CompressionMethod.GZIP:
+            compressor = GZIPCompressor()
+        elif compression_method == CompressionMethod.LZ4:
             compressor = LZ4Compressor()
         elif compression_method == CompressionMethod.ZSTD:
             compressor = ZSTDCompressor()
@@ -55,6 +59,7 @@ def test_file() -> None:
 def test_stream() -> None:
 
     for compression_method in (
+        CompressionMethod.GZIP,
         CompressionMethod.LZ4,
         CompressionMethod.ZSTD,
     ):
@@ -72,6 +77,7 @@ def test_autodetection() -> None:
 
     for compression_method in (
         CompressionMethod.NONE,
+        CompressionMethod.GZIP,
         CompressionMethod.LZ4,
         CompressionMethod.ZSTD,
     ):

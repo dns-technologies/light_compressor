@@ -9,7 +9,7 @@ class ZSTDCompressor:
         self,
         compression_level: int = 3,
     ) -> None:
-        """Class inialization."""
+        """Class initialization."""
 
         self.context: object
         self.compression_level: int

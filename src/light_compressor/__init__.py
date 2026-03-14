@@ -5,11 +5,13 @@ from .compressor_method import (
     CompressionMethod,
 )
 from .compressors import (
+    GZIPCompressor,
     LZ4Compressor,
     ZSTDCompressor,
 )
 from .decompressors import (
     DecompressReader,
+    GZIPDecompressor,
     LZ4Decompressor,
     ZSTDDecompressor,
 )
@@ -18,14 +20,16 @@ from .writer import define_writer
 
 
 __all__ = (
-    "auto_detector",
-    "define_reader",
-    "define_writer",
-    "DecompressReader",
     "CompressionMethod",
+    "DecompressReader",
+    "GZIPCompressor",
+    "GZIPDecompressor",
     "LZ4Compressor",
     "LZ4Decompressor",
     "ZSTDCompressor",
     "ZSTDDecompressor",
+    "auto_detector",
+    "define_reader",
+    "define_writer",
 )
-__version__ = "0.0.2.2"
+__version__ = "0.1.0.dev0"

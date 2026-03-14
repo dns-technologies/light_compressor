@@ -1,5 +1,13 @@
 # Version History
 
+## 0.1.0.dev0
+
+* Developer release (not public to pip)
+* Improve docstrings
+* Add GZIPCompressor
+* Add GZIPDecompressor
+* Add Gzip checker to test_all.py
+
 ## 0.0.2.2
 
 * Change documentation link

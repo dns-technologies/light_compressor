@@ -13,13 +13,12 @@ cdef class ZSTDDecompressor:
 
         if self._dctx == ffi.NULL:
             raise MemoryError("Unable to create ZSTD decompression context")
-        
+
         self._dctx = ffi.gc(
             self._dctx, 
             lib.ZSTD_freeDCtx, 
             size=lib.ZSTD_sizeof_DCtx(self._dctx)
         )
-        
         self.eof = False
         self.needs_input = True
         self.unused_data = b""
@@ -53,12 +52,12 @@ cdef class ZSTDDecompressor:
         """Reset the decompressor state."""
 
         cdef unsigned long long decompressed_size
-        
+
         decompressed_size = lib.ZSTD_DCtx_reset(self._dctx, lib.ZSTD_reset_session_only)
 
         if lib.ZSTD_isError(decompressed_size):
             raise RuntimeError("Unable to reset ZSTD context")
-        
+
         self.eof = False
         self.needs_input = True
         self.unused_data = None
@@ -78,7 +77,7 @@ cdef class ZSTDDecompressor:
         cdef object out_buffer, out_data, input_cdata
         cdef size_t output_size
         cdef unsigned long long decompressed_size
-        
+
         if max_length == -1:
             output_size = lib.ZSTD_DStreamOutSize()
         else:
@@ -117,7 +116,7 @@ cdef class ZSTDDecompressor:
             out_buffer,
             self._in_buffer,
         )
-        
+
         if lib.ZSTD_isError(decompressed_size):
             raise RuntimeError("ZSTD decompression error")
 

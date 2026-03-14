@@ -3,6 +3,7 @@ from typing import Generator
 
 from .compressor_method import CompressionMethod
 from .compressors import (
+    GZIPCompressor,
     LZ4Compressor,
     ZSTDCompressor,
 )
@@ -17,7 +18,9 @@ def define_writer(
     if compressor_method is CompressionMethod.NONE:
         return bytes_data
 
-    if compressor_method is CompressionMethod.LZ4:
+    if compressor_method is CompressionMethod.GZIP:
+        compressor = GZIPCompressor()
+    elif compressor_method is CompressionMethod.LZ4:
         compressor = LZ4Compressor()
     elif compressor_method is CompressionMethod.ZSTD:
         compressor = ZSTDCompressor()

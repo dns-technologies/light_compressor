@@ -14,6 +14,7 @@ from typing import (
 
 
 if TYPE_CHECKING:
+    from .gzip import GZIPDecompressor
     from .lz4 import LZ4Decompressor
     from .zstd import ZSTDDecompressor
 
@@ -35,7 +36,9 @@ class DecompressReader(RawIOBase):
         self._size = -1
         self._decomp_factory = decomp_factory
         self._decomp_args = decomp_args
-        self._decompressor: LZ4Decompressor | ZSTDDecompressor = (
+        self._decompressor: (
+            GZIPDecompressor | LZ4Decompressor | ZSTDDecompressor
+        )= (
             self._decomp_factory(**self._decomp_args)
         )
         self._trailing_error = trailing_error

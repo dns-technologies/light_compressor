@@ -8,6 +8,7 @@ class CompressionMethod(Enum):
     NONE = 0x02
     LZ4 = 0x82
     ZSTD = 0x90
+    GZIP = 0x99
 
     @property
     def method(self) -> str:
@@ -28,4 +29,6 @@ def auto_detector(fileobj: BufferedReader) -> CompressionMethod:
         return CompressionMethod.LZ4
     if signature == b"(\xb5/\xfd":
         return CompressionMethod.ZSTD
+    if signature[:2] == b"\x1f\x8b":
+        return CompressionMethod.GZIP
     return CompressionMethod.NONE

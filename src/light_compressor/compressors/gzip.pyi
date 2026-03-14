@@ -2,10 +2,13 @@ from collections.abc import Generator
 from typing import Iterable
 
 
-class LZ4Compressor:
-    """LZ4 chunk compressor."""
+class GZIPCompressor:
+    """Gzip chunk compressor."""
 
-    def __init__(self) -> None:
+    def __init__(
+        self,
+        compression_level: int = -1,
+    ) -> None:
         """Class initialization."""
 
         self.context: object
