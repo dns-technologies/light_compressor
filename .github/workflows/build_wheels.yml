@@ -22,13 +22,19 @@ jobs:
       with:
         python-version: '3.11'
 
+    - name: Install Rust
+      run: |
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+        echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+      shell: bash
+
     - name: Install cibuildwheel
       run: pip install cibuildwheel
 
     - name: Install ONLY cibuildwheel dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install cython>=0.29.33 setuptools wheel
+        pip install cython>=0.29.33 setuptools wheel setuptools-rust
       shell: bash
 
     - name: Build Linux x86_64 wheels
@@ -36,8 +42,10 @@ jobs:
       env:
         CIBW_BUILD: "cp310-* cp311-* cp312-* cp313-* cp314-*"
         CIBW_ARCHS_LINUX: "x86_64"
-        CIBW_BEFORE_ALL: "pip install cython>=0.29.33 setuptools wheel -r requirements.txt"
+        CIBW_BEFORE_ALL: "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && pip install cython>=0.29.33 setuptools wheel setuptools-rust -r requirements.txt"
+        CIBW_BEFORE_BUILD: "apt-get update && apt-get install -y libssl-dev pkg-config || yum install -y openssl-devel || dnf install -y openssl-devel"
         CIBW_SKIP: "*-musllinux*"
+        RUST_BACKTRACE: 1
 
     - name: Upload Linux x86_64 wheels
       uses: actions/upload-artifact@v4
@@ -58,16 +66,30 @@ jobs:
       with:
         python-version: '3.11'
 
+    - name: Install Rust
+      run: |
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -o rustup-init.exe
+        .\rustup-init.exe -y
+        echo "$env:USERPROFILE\.cargo\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+      shell: powershell
+
     - name: Install cibuildwheel
       run: pip install cibuildwheel
+
+    - name: Install ONLY cibuildwheel dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install cython>=0.29.33 setuptools wheel setuptools-rust
+      shell: bash
 
     - name: Build Windows wheels
       run: python -m cibuildwheel --output-dir wheel_prebuild --platform windows
       env:
         CIBW_BUILD: "cp310-* cp311-* cp312-* cp313-* cp314-*"
         CIBW_ARCHS_WINDOWS: "AMD64"
-        CIBW_BEFORE_ALL: "pip install cython>=0.29.33 setuptools wheel -r requirements.txt"
+        CIBW_BEFORE_ALL: "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -o rustup-init.exe && .\rustup-init.exe -y && pip install cython>=0.29.33 setuptools wheel setuptools-rust -r requirements.txt"
         CIBW_SKIP: "*-win32"
+        RUST_BACKTRACE: 1
 
     - name: Upload Windows wheels
       uses: actions/upload-artifact@v4
@@ -88,16 +110,30 @@ jobs:
       with:
         python-version: '3.11'
 
+    - name: Install Rust
+      run: |
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+        echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+      shell: bash
+
     - name: Install cibuildwheel
       run: pip install cibuildwheel
+
+    - name: Install ONLY cibuildwheel dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install cython>=0.29.33 setuptools wheel setuptools-rust
+      shell: bash
 
     - name: Build macOS wheels
       run: python -m cibuildwheel --output-dir wheel_prebuild --platform macos
       env:
         CIBW_BUILD: "cp310-* cp311-* cp312-* cp313-* cp314-*"
         CIBW_ARCHS_MACOS: "x86_64 arm64"
-        CIBW_BEFORE_ALL: "pip install cython>=0.29.33 setuptools wheel -r requirements.txt"
+        CIBW_BEFORE_ALL: "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && pip install cython>=0.29.33 setuptools wheel setuptools-rust -r requirements.txt"
+        CIBW_BEFORE_BUILD: "rustup target add x86_64-apple-darwin && rustup target add aarch64-apple-darwin"
         MACOSX_DEPLOYMENT_TARGET: "10.14"
+        RUST_BACKTRACE: 1
 
     - name: Upload macOS wheels
       uses: actions/upload-artifact@v4
