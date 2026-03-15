@@ -170,8 +170,8 @@ jobs:
       uses: octokit/request-action@v2.x
       with:
         route: POST /repos/dns-technologies/dbhose-dev-pip/actions/workflows/update-index.yml/dispatches
-        inputs: |
-          ref: main
         mediaType: '{"previews": ["antiope"]}'
+        ref: |
+          {"ref":"main"}
       env:
         GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
