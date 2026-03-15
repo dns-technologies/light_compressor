@@ -84,7 +84,7 @@ compressed_stream = define_writer(bytes_data, CompressionMethod.ZSTD)
 From pip
 
 ```bash
-pip install light-compressor
+pip install light-compressor -U --index-url https://dns-technologies.github.io/dbhose-dev-pip/simple/
 ```
 
 From local directory

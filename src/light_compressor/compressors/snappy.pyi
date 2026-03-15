@@ -1,13 +1,19 @@
 from collections.abc import Generator
 from typing import Iterable
 
+from .levels import DEFAULT_COMPRESSION
+
 
 class SNAPPYCompressor:
     """Snappy chunk compressor."""
 
-    def __init__(self) -> None:
+    def __init__(
+        self,
+        compression_level: int = DEFAULT_COMPRESSION,
+    ) -> None:
         """Class initialization."""
 
+        self.compression_level: int
         self.decompressed_size: int
         ...
 

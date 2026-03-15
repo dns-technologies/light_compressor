@@ -3,13 +3,15 @@ from zstandard._cffi import (
     lib,
 )
 
+from light_compressor.compressors.levels import DEFAULT_COMPRESSION
+
 
 cdef class ZSTDCompressor:
     """ZSTD data_chunk compressor."""
 
     def __init__(
         self,
-        short compression_level = 3,
+        short compression_level = DEFAULT_COMPRESSION,
     ):
         """Class initialization."""
 

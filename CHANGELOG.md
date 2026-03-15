@@ -1,5 +1,16 @@
 # Version History
 
+## 0.1.0.dev2
+
+* Developer release (not public to pip)
+* Add CompressionLevel constants for define compression level
+* Add optional parameter compression_level for all compressors. Default is 6
+* Update README.md
+* Update MANIFEST.in
+* Rename compressor_method.py -> compression_method.py
+* Add trigger for update developer pypi indexes
+* Refactor workers
+
 ## 0.1.0.dev1
 
 * Developer release (not public to pip)

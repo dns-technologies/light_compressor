@@ -5,13 +5,19 @@ from lz4.frame._frame import (
     compress_flush,
 )
 
+from light_compressor.compressors.levels import DEFAULT_COMPRESSION
+
 
 cdef class LZ4Compressor:
     """LZ4 chunk compressor."""
 
-    def __init__(self):
+    def __init__(
+        self,
+        short compression_level = DEFAULT_COMPRESSION,
+    ):
         """Class initialization."""
 
+        self.compression_level = compression_level
         self.context = create_compression_context()
         self.decompressed_size = 0
 
@@ -25,7 +31,10 @@ cdef class LZ4Compressor:
         cdef bytes data_chunk, compressed
         self.decompressed_size = 0
 
-        compressed = compress_begin(self.context)
+        compressed = compress_begin(
+            self.context,
+            compression_level=self.compression_level,
+        )
         compressed_chunks.append(compressed)
 
         for data_chunk in bytes_data:

@@ -2,7 +2,7 @@
 
 from io import BufferedReader
 
-from .compressor_method import (
+from .compression_method import (
     auto_detector,
     CompressionMethod,
 )

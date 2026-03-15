@@ -2,6 +2,14 @@ include CHANGELOG.md
 include README.md
 include LICENSE
 
+include src/light_compressor/*/snappy/Cargo.toml
+recursive-include src/light_compressor/*/snappy/src *.rs
+recursive-include src/light_compressor/*/ *.pyi
+
+prune src/light_compressor/*/snappy/target
+prune */target
+prune target
+
 include src/light_compressor/compressors/*.pyx
 include src/light_compressor/decompressors/*.pyx
 include src/light_compressor/compressors/*.pyi

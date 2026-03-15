@@ -1,17 +1,20 @@
 from zlib import compressobj
 
+from light_compressor.compressors.levels import DEFAULT_COMPRESSION
+
 
 cdef class GZIPCompressor:
     """Gzip chunk compressor."""
 
     def __init__(
         self,
-        short compression_level = -1,
+        short compression_level = DEFAULT_COMPRESSION,
     ):
         """Class initialization."""
 
+        self.compression_level = compression_level
         self.context = compressobj(
-            level=compression_level,
+            level=self.compression_level,
             method=8,
             wbits=31,
             memLevel=8,

@@ -1,10 +1,11 @@
 """Library for read compressed stream and write compressed chunks."""
 
-from .compressor_method import (
+from .compression_method import (
     auto_detector,
     CompressionMethod,
 )
 from .compressors import (
+    CompressionLevel,
     GZIPCompressor,
     LZ4Compressor,
     SNAPPYCompressor,
@@ -22,6 +23,7 @@ from .writer import define_writer
 
 
 __all__ = (
+    "CompressionLevel",
     "CompressionMethod",
     "DecompressReader",
     "GZIPCompressor",
@@ -36,4 +38,4 @@ __all__ = (
     "define_reader",
     "define_writer",
 )
-__version__ = "0.1.0.dev1"
+__version__ = "0.1.0.dev2"

@@ -12,6 +12,7 @@ pub struct SNAPPYCompressor {
     buffer: Vec<u8>,
     encoder: FrameEncoder<Vec<u8>>,
     current_chunk: Vec<u8>,
+    compression_level: i32,
 }
 
 #[pyclass]
@@ -40,8 +41,10 @@ impl CompressionIter {
 #[pymethods]
 impl SNAPPYCompressor {
     #[new]
-    fn new() -> Self {
+    #[pyo3(signature = (compression_level=6))]
+    fn new(compression_level: i32) -> Self {
         SNAPPYCompressor {
+            compression_level,
             decompressed_size: 0,
             buffer: Vec::with_capacity(MAX_BLOCK_SIZE),
             encoder: FrameEncoder::new(Vec::new()),
@@ -60,7 +63,6 @@ impl SNAPPYCompressor {
         let mut compressed_chunks = Vec::new();
         let mut total_size = 0;
 
-        // В PyO3 0.26.0 итератор возвращает Bound<'_, PyAny> напрямую, без Result
         for item in bytes_data.iter() {
             let data: Vec<u8> = item.extract()?;
             total_size += data.len();
@@ -71,7 +73,6 @@ impl SNAPPYCompressor {
             }
         }
 
-        // Компрессия
         for item in bytes_data.iter() {
             let data: Vec<u8> = item.extract()?;
             self.decompressed_size += data.len() as u64;
@@ -102,7 +103,6 @@ impl SNAPPYCompressor {
             }
         }
 
-        // Сжимаем остаток
         if !self.buffer.is_empty() {
             if let Err(e) = self.encoder.write_all(&self.buffer) {
                 return Err(PyErr::new::<pyo3::exceptions::PyRuntimeError, _>(
@@ -136,6 +136,11 @@ impl SNAPPYCompressor {
         };
         
         Ok(Py::new(py, iter)?)
+    }
+
+    #[getter]
+    fn compression_level(&self) -> i32 {
+        self.compression_level
     }
 
     #[getter]

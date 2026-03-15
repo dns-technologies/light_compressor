@@ -1,8 +1,9 @@
 from collections.abc import Iterable
 from typing import Generator
 
-from .compressor_method import CompressionMethod
+from .compression_method import CompressionMethod
 from .compressors import (
+    CompressionLevel,
     GZIPCompressor,
     LZ4Compressor,
     SNAPPYCompressor,
@@ -13,6 +14,7 @@ from .compressors import (
 def define_writer(
     bytes_data: Iterable[bytes],
     compressor_method: CompressionMethod = CompressionMethod.NONE,
+    compressor_level: int = CompressionLevel.DEFAULT_COMPRESSION,
 ) -> Generator[bytes, None, None]:
     """Select current method for stream object."""
 
@@ -20,14 +22,14 @@ def define_writer(
         return bytes_data
 
     if compressor_method is CompressionMethod.GZIP:
-        compressor = GZIPCompressor()
+        Compressor = GZIPCompressor
     elif compressor_method is CompressionMethod.LZ4:
-        compressor = LZ4Compressor()
+        Compressor = LZ4Compressor
     elif compressor_method is CompressionMethod.SNAPPY:
-        compressor = SNAPPYCompressor()
+        Compressor = SNAPPYCompressor
     elif compressor_method is CompressionMethod.ZSTD:
-        compressor = ZSTDCompressor()
+        Compressor = ZSTDCompressor
     else:
         raise ValueError(f"Unsupported compression method {compressor_method}")
 
-    return compressor.send_chunks(bytes_data)
+    return Compressor(compressor_level).send_chunks(bytes_data)

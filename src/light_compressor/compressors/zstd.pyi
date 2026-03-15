@@ -1,13 +1,15 @@
 from collections.abc import Generator
 from typing import Iterable
 
+from .levels import DEFAULT_COMPRESSION
+
 
 class ZSTDCompressor:
     """ZSTD data_chunk compressor."""
 
     def __init__(
         self,
-        compression_level: int = 3,
+        compression_level: int = DEFAULT_COMPRESSION,
     ) -> None:
         """Class initialization."""
 
