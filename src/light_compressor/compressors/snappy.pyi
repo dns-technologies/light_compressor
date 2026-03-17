@@ -4,7 +4,7 @@ from typing import Iterable
 from .levels import DEFAULT_COMPRESSION
 
 
-class SNAPPYCompressor:
+class SNAPCompressor:
     """Snappy chunk compressor."""
 
     def __init__(

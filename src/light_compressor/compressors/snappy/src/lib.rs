@@ -7,7 +7,7 @@ const MAX_BLOCK_SIZE: usize = 65536;
 const MAX_TOTAL_SIZE: usize = 104857600;
 
 #[pyclass]
-pub struct SNAPPYCompressor {
+pub struct SNAPCompressor {
     decompressed_size: u64,
     buffer: Vec<u8>,
     encoder: FrameEncoder<Vec<u8>>,
@@ -39,11 +39,11 @@ impl CompressionIter {
 }
 
 #[pymethods]
-impl SNAPPYCompressor {
+impl SNAPCompressor {
     #[new]
     #[pyo3(signature = (compression_level=6))]
     fn new(compression_level: i32) -> Self {
-        SNAPPYCompressor {
+        SNAPCompressor {
             compression_level,
             decompressed_size: 0,
             buffer: Vec::with_capacity(MAX_BLOCK_SIZE),
@@ -151,6 +151,6 @@ impl SNAPPYCompressor {
 
 #[pymodule]
 fn snappy(m: &Bound<'_, PyModule>) -> PyResult<()> {
-    m.add_class::<SNAPPYCompressor>()?;
+    m.add_class::<SNAPCompressor>()?;
     Ok(())
 }

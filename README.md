@@ -34,7 +34,7 @@ decompressed_stream = define_reader(fileobj)
 from light_compressor import (
     GZIPCompressor,
     LZ4Compressor,
-    SNAPPYCompressor,
+    SNAPCompressor,
     ZSTDCompressor,
 )
 # some data in bytes

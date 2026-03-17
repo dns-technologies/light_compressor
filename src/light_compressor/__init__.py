@@ -8,14 +8,14 @@ from .compressors import (
     CompressionLevel,
     GZIPCompressor,
     LZ4Compressor,
-    SNAPPYCompressor,
+    SNAPCompressor,
     ZSTDCompressor,
 )
 from .decompressors import (
     DecompressReader,
     GZIPDecompressor,
     LZ4Decompressor,
-    SNAPPYDecompressor,
+    SNAPDecompressor,
     ZSTDDecompressor,
 )
 from .reader import define_reader
@@ -30,12 +30,12 @@ __all__ = (
     "GZIPDecompressor",
     "LZ4Compressor",
     "LZ4Decompressor",
-    "SNAPPYCompressor",
-    "SNAPPYDecompressor",
+    "SNAPCompressor",
+    "SNAPDecompressor",
     "ZSTDCompressor",
     "ZSTDDecompressor",
     "auto_detector",
     "define_reader",
     "define_writer",
 )
-__version__ = "0.1.0.dev2"
+__version__ = "0.1.0.dev3"

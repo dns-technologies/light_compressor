@@ -4,7 +4,7 @@ use snap::read::FrameDecoder;
 use std::io::{Read, Cursor};
 
 #[pyclass]
-pub struct SNAPPYDecompressor {
+pub struct SNAPDecompressor {
     decoder: Option<FrameDecoder<Cursor<Vec<u8>>>>,
     eof: bool,
     needs_input: bool,
@@ -15,10 +15,10 @@ pub struct SNAPPYDecompressor {
 }
 
 #[pymethods]
-impl SNAPPYDecompressor {
+impl SNAPDecompressor {
     #[new]
     fn new() -> Self {
-        SNAPPYDecompressor {
+        SNAPDecompressor {
             decoder: None,
             eof: false,
             needs_input: true,
@@ -156,6 +156,6 @@ impl SNAPPYDecompressor {
 
 #[pymodule]
 fn snappy(m: &Bound<'_, PyModule>) -> PyResult<()> {
-    m.add_class::<SNAPPYDecompressor>()?;
+    m.add_class::<SNAPDecompressor>()?;
     Ok(())
 }

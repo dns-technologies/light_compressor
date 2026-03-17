@@ -6,13 +6,7 @@ from .compression_method import (
     auto_detector,
     CompressionMethod,
 )
-from .decompressors import (
-    DecompressReader,
-    GZIPDecompressor,
-    LZ4Decompressor,
-    SNAPPYDecompressor,
-    ZSTDDecompressor,
-)
+from .decompressors import DecompressReader
 
 
 def define_reader(
@@ -27,16 +21,5 @@ def define_reader(
     if compressor_method is CompressionMethod.NONE:
         return fileobj
 
-    if compressor_method is CompressionMethod.GZIP:
-        decompressor = GZIPDecompressor
-    elif compressor_method is CompressionMethod.LZ4:
-        decompressor = LZ4Decompressor
-    elif compressor_method == CompressionMethod.SNAPPY:
-        decompressor = SNAPPYDecompressor
-    elif compressor_method == CompressionMethod.ZSTD:
-        decompressor = ZSTDDecompressor
-    else:
-        raise ValueError(f"Unsupported compression method {compressor_method}")
-
-    raw = DecompressReader(fileobj, decompressor)
+    raw = DecompressReader(fileobj, compressor_method.decompressor)
     return BufferedReader(raw)

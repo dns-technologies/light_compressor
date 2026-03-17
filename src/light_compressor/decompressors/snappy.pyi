@@ -1,4 +1,4 @@
-class SNAPPYDecompressor:
+class SNAPDecompressor:
     """Snappy frame rust decompressor."""
 
     def __init__(self) -> None:
@@ -10,7 +10,7 @@ class SNAPPYDecompressor:
         self._unconsumed_data: bytes
         self._return_bytearray: bool
 
-    def __enter__(self) -> "SNAPPYDecompressor":
+    def __enter__(self) -> "SNAPDecompressor":
         """Enter context manager."""
         ...
 

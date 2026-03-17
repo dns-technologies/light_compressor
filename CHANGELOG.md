@@ -1,5 +1,14 @@
 # Version History
 
+## 0.1.0.dev3
+
+* Developer release (not public to pip)
+* Change CompressionMethod struct
+* Change DecompressReader language python -> cython
+* Refactor detect compressors/decompressors
+* Rename SNAPPYCompressor -> SNAPCompressor
+* Rename SNAPPYDecompressor -> SNAPDecompressor
+
 ## 0.1.0.dev2
 
 * Developer release (not public to pip)

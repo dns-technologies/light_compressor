@@ -3,7 +3,7 @@ from random import randbytes, randint
 from light_compressor import (
     define_reader,
     CompressionMethod,
-    SNAPPYCompressor,
+    SNAPCompressor,
 )
 from io import BytesIO
 
@@ -37,7 +37,7 @@ def test_snappy_small_data(small_data):
     """Тест Snappy на малых данных."""
 
     fileobj = BytesIO()
-    compressor = SNAPPYCompressor()
+    compressor = SNAPCompressor()
 
     for data in compressor.send_chunks(small_data):
         fileobj.write(data)
@@ -55,7 +55,7 @@ def test_snappy_medium_data(medium_data):
     """Тест Snappy на данных среднего размера."""
 
     fileobj = BytesIO()
-    compressor = SNAPPYCompressor()
+    compressor = SNAPCompressor()
 
     for data in compressor.send_chunks(medium_data):
         fileobj.write(data)
@@ -73,7 +73,7 @@ def test_snappy_large_data(large_data):
     """Тест Snappy на данных большого размера."""
 
     fileobj = BytesIO()
-    compressor = SNAPPYCompressor()
+    compressor = SNAPCompressor()
 
     for data in compressor.send_chunks(large_data):
         fileobj.write(data)
@@ -93,7 +93,7 @@ def test_snappy_compression_decompression_cycle():
     for size in [10, 50, 100, 150, 200, 250]:
         data = [randbytes(randint(20, 40)) for _ in range(size)]  # noqa: S311
         fileobj = BytesIO()
-        compressor = SNAPPYCompressor()
+        compressor = SNAPCompressor()
 
         for compressed in compressor.send_chunks(data):
             fileobj.write(compressed)
