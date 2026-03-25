@@ -1,5 +1,14 @@
 # Version History
 
+## 0.1.0.dev4
+
+* Developer release (not public to pip)
+* Add CompressorType for type hinting
+* Add DecompressorType for type hinting
+* Refactor Codec class
+* Refactor define_writer function
+* Remove Rust and Cython source code from wheel package
+
 ## 0.1.0.dev3
 
 * Developer release (not public to pip)

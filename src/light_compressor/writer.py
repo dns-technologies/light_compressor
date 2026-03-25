@@ -1,14 +1,14 @@
-from collections.abc import Iterable
-from typing import Generator
+from collections.abc import (
+    Generator,
+    Iterable,
+)
+from typing import TYPE_CHECKING
 
 from .compression_method import CompressionMethod
-from .compressors import (
-    CompressionLevel,
-    GZIPCompressor,
-    LZ4Compressor,
-    SNAPCompressor,
-    ZSTDCompressor,
-)
+from .compressors import CompressionLevel
+
+if TYPE_CHECKING:
+    from .types import CompressorType
 
 
 def define_writer(
@@ -26,7 +26,5 @@ def define_writer(
     if compressor_method is CompressionMethod.NONE:
         return bytes_data
 
-    compressor: (
-        GZIPCompressor | LZ4Compressor | SNAPCompressor | ZSTDCompressor
-    ) = compressor_method.compressor(compressor_level)
+    compressor: CompressorType = compressor_method.compressor(compressor_level)
     return compressor.send_chunks(bytes_data)

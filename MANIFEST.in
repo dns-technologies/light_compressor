@@ -2,33 +2,26 @@ include CHANGELOG.md
 include README.md
 include LICENSE
 
-include src/light_compressor/*/snappy/Cargo.toml
-recursive-include src/light_compressor/*/snappy/src *.rs
-recursive-include src/light_compressor/*/ *.pyi
-
 prune src/light_compressor/*/snappy/target
 prune */target
 prune target
 
-include src/light_compressor/compressors/*.pyx
-include src/light_compressor/decompressors/*.pyx
 include src/light_compressor/compressors/*.pyi
 include src/light_compressor/decompressors/*.pyi
-include src/light_compressor/compressors/*.pxd
-include src/light_compressor/decompressors/*.pxd
-recursive-include src/light_compressor *.pyx
 recursive-include src/light_compressor *.pyi
-recursive-include src/light_compressor *.pxd
+recursive-include src/light_compressor/*/ *.pyi
 
 exclude src/light_compressor/compressors/*.c
+exclude src/light_compressor/compressors/*.pyx
+exclude src/light_compressor/compressors/*.pxd
+exclude src/light_compressor/decompressors/*.pyx
+exclude src/light_compressor/decompressors/*.pxd
 exclude src/light_compressor/decompressors/*.c
 recursive-exclude src/light_compressor *.c
+recursive-exclude src/light_compressor *.pyx
+recursive-exclude src/light_compressor *.pxd
 
 exclude *.c
-exclude *.pyd
 exclude src/*.c
-exclude src/*.pyd
 exclude src/**/*.c
-exclude src/**/*.pyd
 global-exclude *.c
-global-exclude *.pyd

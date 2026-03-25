@@ -40,7 +40,7 @@ extensions = [
 
 setup(
     name="light_compressor",
-    version="0.1.0.dev3",
+    version="0.1.0.dev4",
     package_dir={"": "src"},
     ext_modules=cythonize(extensions, language_level="3"),
     rust_extensions=[
@@ -60,12 +60,14 @@ setup(
     ],
     package_data={
         "light_compressor": [
-            "**/*.pyx", "**/*.pxd", "*.pxd", "*.pyd", "*.md", "*.txt",
+            "*.pyd", "*.md", "*.txt",
         ]
     },
     exclude_package_data={
-        "": ["*.c"],
-        "light_compressor": ["**/*.c"],
+        "": ["*.c", "*.pxd", "*.pyx", "*.toml", "*.rs"],
+        "light_compressor": [
+            "**/*.c", "**/*.pxd", "**/*.pyx", "**/*.toml", "**/*.rs"
+        ],
     },
     include_package_data=True,
     setup_requires=["Cython>=0.29.33"],

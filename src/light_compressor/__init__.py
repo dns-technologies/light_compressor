@@ -19,12 +19,18 @@ from .decompressors import (
     ZSTDDecompressor,
 )
 from .reader import define_reader
+from .types import (
+    CompressorType,
+    DecompressorType,
+)
 from .writer import define_writer
 
 
 __all__ = (
     "CompressionLevel",
     "CompressionMethod",
+    "CompressorType",
+    "DecompressorType",
     "DecompressReader",
     "GZIPCompressor",
     "GZIPDecompressor",
@@ -38,4 +44,4 @@ __all__ = (
     "define_reader",
     "define_writer",
 )
-__version__ = "0.1.0.dev3"
+__version__ = "0.1.0.dev4"

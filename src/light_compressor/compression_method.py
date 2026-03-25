@@ -14,20 +14,18 @@ from .decompressors import (
     SNAPDecompressor,
     ZSTDDecompressor,
 )
+from .types import (
+    CompressorType,
+    DecompressorType,
+)
 
 
 class Codec(NamedTuple):
     """Define codec data."""
 
     signature: bytes
-    compressor: (
-        GZIPCompressor | LZ4Compressor |
-        SNAPCompressor | ZSTDCompressor
-    )
-    decompressor: (
-        GZIPDecompressor | LZ4Decompressor |
-        SNAPDecompressor | ZSTDDecompressor
-    )
+    compressor: CompressorType
+    decompressor: DecompressorType
 
 
 CODEC_DEFINES = {
