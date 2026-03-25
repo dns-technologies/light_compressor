@@ -12,6 +12,9 @@ from typing import (
 class CompressorType(Protocol):
     """Protocol for compressor implementations."""
 
+    compression_level: int
+    decompressed_size: int
+
     def send_chunks(
         self,
         bytes_data: Iterable[bytes],
