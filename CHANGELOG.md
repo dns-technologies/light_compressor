@@ -8,6 +8,7 @@
 * Refactor Codec class
 * Refactor define_writer function
 * Remove Rust and Cython source code from wheel package
+* Fix SNAPCompressor work with bytes_data as Generator object
 
 ## 0.1.0.dev3
 

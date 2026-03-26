@@ -1,5 +1,5 @@
 use pyo3::prelude::*;
-use pyo3::types::{PyBytes, PyList};
+use pyo3::types::{PyBytes, PyAny};
 use snap::write::FrameEncoder;
 use std::io::Write;
 
@@ -55,66 +55,70 @@ impl SNAPCompressor {
     fn send_chunks(
         &mut self,
         py: Python<'_>,
-        bytes_data: &Bound<'_, PyList>,
+        bytes_data: &Bound<'_, PyAny>,
     ) -> PyResult<Py<CompressionIter>> {
         self.decompressed_size = 0;
         self.buffer.clear();
         self.current_chunk.clear();
+        *self.encoder.get_mut() = Vec::new();
         let mut compressed_chunks = Vec::new();
         let mut total_size = 0;
+        let iter = bytes_data.call_method0("__iter__")?;
 
-        for item in bytes_data.iter() {
-            let data: Vec<u8> = item.extract()?;
-            total_size += data.len();
-            if total_size > MAX_TOTAL_SIZE {
-                return Err(PyErr::new::<pyo3::exceptions::PyValueError, _>(
-                    format!("Data size exceeds maximum allowed ({} bytes)", MAX_TOTAL_SIZE)
-                ));
-            }
-        }
+        loop {
+            let next_item = iter.call_method0("__next__");
 
-        for item in bytes_data.iter() {
-            let data: Vec<u8> = item.extract()?;
-            self.decompressed_size += data.len() as u64;
-            self.buffer.extend_from_slice(&data);
+            match next_item {
+                Ok(item) => {
+                    let data: Vec<u8> = item.extract()?;
+                    total_size += data.len();
+                    if total_size > MAX_TOTAL_SIZE {
+                        return Err(PyErr::new::<pyo3::exceptions::PyValueError, _>(
+                            format!("Data size exceeds maximum allowed ({} bytes)", MAX_TOTAL_SIZE)
+                        ));
+                    }
 
-            while self.buffer.len() >= MAX_BLOCK_SIZE {
-                let block = self.buffer[..MAX_BLOCK_SIZE].to_vec();
-                self.buffer = self.buffer[MAX_BLOCK_SIZE..].to_vec();
+                    self.decompressed_size += data.len() as u64;
+                    self.buffer.extend_from_slice(&data);
 
-                if let Err(e) = self.encoder.write_all(&block) {
-                    return Err(PyErr::new::<pyo3::exceptions::PyRuntimeError, _>(
-                        format!("Snappy compression error: {}", e)
-                    ));
+                    while self.buffer.len() >= MAX_BLOCK_SIZE {
+                        let block = self.buffer[..MAX_BLOCK_SIZE].to_vec();
+                        self.buffer = self.buffer[MAX_BLOCK_SIZE..].to_vec();
+                        self.encoder.write_all(&block)
+                            .map_err(|e| PyErr::new::<pyo3::exceptions::PyRuntimeError, _>(
+                                format!("Snappy compression error: {}", e)
+                            ))?;
+                        self.encoder.flush()
+                            .map_err(|e| PyErr::new::<pyo3::exceptions::PyRuntimeError, _>(
+                                format!("Snappy compression error: {}", e)
+                            ))?;
+                        let compressed = self.encoder.get_ref().clone();
+
+                        if !compressed.is_empty() {
+                            self.current_chunk.extend_from_slice(&compressed);
+                            *self.encoder.get_mut() = Vec::new();
+                        }
+                    }
                 }
-
-                if let Err(e) = self.encoder.flush() {
-                    return Err(PyErr::new::<pyo3::exceptions::PyRuntimeError, _>(
-                        format!("Snappy compression error: {}", e)
-                    ));
-                }
-
-                let compressed = self.encoder.get_ref().clone();
-
-                if !compressed.is_empty() {
-                    self.current_chunk.extend_from_slice(&compressed);
-                    *self.encoder.get_mut() = Vec::new();
+                Err(e) => {
+                    if e.is_instance_of::<pyo3::exceptions::PyStopIteration>(py) {
+                        break;
+                    }
+                    return Err(e);
                 }
             }
         }
 
         if !self.buffer.is_empty() {
-            if let Err(e) = self.encoder.write_all(&self.buffer) {
-                return Err(PyErr::new::<pyo3::exceptions::PyRuntimeError, _>(
+            self.encoder.write_all(&self.buffer)
+                .map_err(|e| PyErr::new::<pyo3::exceptions::PyRuntimeError, _>(
                     format!("Snappy compression error: {}", e)
-                ));
-            }
+                ))?;
 
-            if let Err(e) = self.encoder.flush() {
-                return Err(PyErr::new::<pyo3::exceptions::PyRuntimeError, _>(
+            self.encoder.flush()
+                .map_err(|e| PyErr::new::<pyo3::exceptions::PyRuntimeError, _>(
                     format!("Snappy compression error: {}", e)
-                ));
-            }
+                ))?;
 
             let compressed = self.encoder.get_ref().clone();
             if !compressed.is_empty() {
@@ -123,7 +127,7 @@ impl SNAPCompressor {
         }
 
         if !self.current_chunk.is_empty() {
-            compressed_chunks.push(self.current_chunk.clone());
+            compressed_chunks.push(std::mem::take(&mut self.current_chunk));
         } else {
             return Err(PyErr::new::<pyo3::exceptions::PyRuntimeError, _>(
                 "Compression failed: no data produced".to_string()
@@ -134,7 +138,7 @@ impl SNAPCompressor {
             chunks: compressed_chunks,
             index: 0,
         };
-        
+
         Ok(Py::new(py, iter)?)
     }
 

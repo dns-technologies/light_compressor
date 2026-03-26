@@ -7,9 +7,7 @@ from light_compressor import (
     define_reader,
     define_writer,
     CompressionMethod,
-    GZIPCompressor,
-    LZ4Compressor,
-    ZSTDCompressor,
+    CompressorType,
 )
 
 
@@ -17,8 +15,8 @@ fileobj = BytesIO()
 
 bytes_data = [
     randbytes(randint(20, 40))  # noqa: S311
-    for _ in range(100)
-] * 100
+    for _ in range(130)
+] * 2
 
 
 def decompress(compression_method: CompressionMethod) -> None:
@@ -36,18 +34,13 @@ def test_file() -> None:
         CompressionMethod.GZIP,
         CompressionMethod.LZ4,
         CompressionMethod.ZSTD,
+        CompressionMethod.SNAPPY,
     ):
         fileobj.seek(0)
         fileobj.truncate()
         full_data = b"".join(bytes_data)
         decompressed_size = len(full_data)
-
-        if compression_method == CompressionMethod.GZIP:
-            compressor = GZIPCompressor()
-        elif compression_method == CompressionMethod.LZ4:
-            compressor = LZ4Compressor()
-        elif compression_method == CompressionMethod.ZSTD:
-            compressor = ZSTDCompressor()
+        compressor: CompressorType = compression_method.compressor()
 
         for data in compressor.send_chunks(bytes_data):
             fileobj.write(data)
@@ -62,6 +55,7 @@ def test_stream() -> None:
         CompressionMethod.GZIP,
         CompressionMethod.LZ4,
         CompressionMethod.ZSTD,
+        CompressionMethod.SNAPPY,
     ):
 
         fileobj.seek(0)
@@ -80,6 +74,7 @@ def test_autodetection() -> None:
         CompressionMethod.GZIP,
         CompressionMethod.LZ4,
         CompressionMethod.ZSTD,
+        CompressionMethod.SNAPPY,
     ):
         fileobj.seek(0)
         fileobj.truncate()
