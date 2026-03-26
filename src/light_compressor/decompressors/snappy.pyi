@@ -1,14 +1,16 @@
 class SNAPDecompressor:
     """Snappy frame rust decompressor."""
 
+    eof: bool
+    needs_input: bool
+    unused_data: bytes
+    _unconsumed_data: bytes
+    _return_bytearray: bool
+
     def __init__(self) -> None:
         """Class initialization."""
 
-        self.eof: bool
-        self.needs_input: bool
-        self.unused_data: bytes
-        self._unconsumed_data: bytes
-        self._return_bytearray: bool
+        ...
 
     def __enter__(self) -> "SNAPDecompressor":
         """Enter context manager."""

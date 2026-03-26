@@ -42,6 +42,7 @@ cdef class ZSTDCompressor:
         )
 
     cdef void _setup_buffers(self, unsigned long long data_chunk_size):
+        """Setup buffers for size."""
 
         cdef object dst_capacity = lib.ZSTD_compressBound(data_chunk_size)
 
@@ -52,18 +53,19 @@ cdef class ZSTDCompressor:
         self._out_buffer_struct.dst = self._dst_buffer
         self._out_buffer_struct.size = self._dst_capacity
         self._out_buffer_struct.pos = 0
-        
+
     cdef unsigned long long _setup_input_buffer(self, bytes data_chunk):
+        """Setup input buffer for data."""
 
         cdef unsigned long long data_chunk_size = len(data_chunk)
         self._src_buffer = ffi.from_buffer(data_chunk)
         self._in_buffer_struct.src = self._src_buffer
         self._in_buffer_struct.size = data_chunk_size
         self._in_buffer_struct.pos = 0
-        
         return data_chunk_size
 
     cdef list _compress_stream(self, object operation):
+        """Compressed chunks."""
 
         cdef list compressed_chunks = []
         cdef object remaining, error_name
@@ -92,6 +94,7 @@ cdef class ZSTDCompressor:
         return compressed_chunks
 
     cdef list _end_compression(self):
+        """Finalize compression."""
 
         cdef list compressed_chunks = []
         cdef object remaining, error_name
@@ -136,10 +139,50 @@ cdef class ZSTDCompressor:
         cdef list chunk_result, end_result, compressed_chunks = []
         cdef bytes data_chunk
         cdef unsigned long long data_chunk_size
+        cdef bint has_data = False
+        cdef object iterator
+        cdef size_t compressed_size
+        cdef bytes empty_frame
 
         self.decompressed_size = 0
+        iterator = iter(bytes_data)
 
-        for data_chunk in bytes_data:
+        try:
+            first = next(iterator)
+            has_data = True
+        except StopIteration:
+            has_data = False
+
+        if not has_data:
+            compressed_size = lib.ZSTD_compressBound(0)
+            out_buffer = ffi.new("char[]", compressed_size)
+            compressed_size = lib.ZSTD_compress(
+                out_buffer, compressed_size,
+                ffi.NULL, 0,
+                self.compression_level
+            )
+
+            if lib.ZSTD_isError(compressed_size):
+                error_name = ffi.string(
+                    lib.ZSTD_getErrorName(compressed_size),
+                )
+                raise ValueError(
+                    f"Empty frame compression error: {error_name}",
+                )
+            
+            empty_frame = bytes(ffi.buffer(out_buffer, compressed_size))
+            compressed_chunks.append(empty_frame)
+            yield b"".join(compressed_chunks)
+            lib.ZSTD_freeCCtx(self.context)
+            return
+
+        data_chunk_size = self._setup_input_buffer(first)
+        self.decompressed_size += data_chunk_size
+        self._setup_buffers(data_chunk_size)
+        chunk_result = self._compress_stream(lib.ZSTD_e_continue)
+        compressed_chunks.extend(chunk_result)
+
+        for data_chunk in iterator:
             if len(compressed_chunks) > 128:
                 yield b"".join(compressed_chunks)
                 compressed_chunks.clear()

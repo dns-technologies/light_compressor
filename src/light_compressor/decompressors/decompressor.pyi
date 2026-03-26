@@ -13,6 +13,15 @@ from typing import (
 class DecompressReader:
     """Adapts the decompressor reader API."""
 
+    _fp: BufferedReader
+    _eof: bool
+    _pos: int
+    _size: int
+    _decomp_factory: object
+    _decomp_args: dict[str, Any]
+    _decompressor: object
+    _trailing_error: tuple
+
     def __init__(
         self,
         fp: BufferedReader,
@@ -22,14 +31,6 @@ class DecompressReader:
     ) -> None:
         """Class initialization."""
 
-        self._fp: BufferedReader
-        self._eof: bool
-        self._pos: int
-        self._size: int
-        self._decomp_factory: object
-        self._decomp_args: dict[str, Any]
-        self._decompressor: object
-        self._trailing_error: tuple
         ...
 
     @property

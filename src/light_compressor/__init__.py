@@ -14,6 +14,7 @@ from .compressors import (
 from .decompressors import (
     DecompressReader,
     GZIPDecompressor,
+    LimitedReader,
     LZ4Decompressor,
     SNAPDecompressor,
     ZSTDDecompressor,
@@ -34,6 +35,7 @@ __all__ = (
     "DecompressReader",
     "GZIPCompressor",
     "GZIPDecompressor",
+    "LimitedReader",
     "LZ4Compressor",
     "LZ4Decompressor",
     "SNAPCompressor",
@@ -44,4 +46,4 @@ __all__ = (
     "define_reader",
     "define_writer",
 )
-__version__ = "0.1.0.dev4"
+__version__ = "0.1.0.dev5"

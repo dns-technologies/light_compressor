@@ -7,14 +7,15 @@ from .levels import DEFAULT_COMPRESSION
 class SNAPCompressor:
     """Snappy chunk compressor."""
 
+    compression_level: int
+    decompressed_size: int
+
     def __init__(
         self,
         compression_level: int = DEFAULT_COMPRESSION,
     ) -> None:
         """Class initialization."""
 
-        self.compression_level: int
-        self.decompressed_size: int
         ...
 
     def send_chunks(

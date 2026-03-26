@@ -3,6 +3,7 @@
 from .decompressor import DecompressReader
 from .gzip import GZIPDecompressor
 from .lz4 import LZ4Decompressor
+from .reader import LimitedReader
 from .snappy import SNAPDecompressor
 from .zstd import ZSTDDecompressor
 
@@ -10,6 +11,7 @@ from .zstd import ZSTDDecompressor
 __all__ = (
     "DecompressReader",
     "GZIPDecompressor",
+    "LimitedReader",
     "LZ4Decompressor",
     "SNAPDecompressor",
     "ZSTDDecompressor",

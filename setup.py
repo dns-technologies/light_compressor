@@ -32,6 +32,10 @@ extensions = [
         ["src/light_compressor/decompressors/lz4.pyx"],
     ),
     Extension(
+        "light_compressor.decompressors.reader",
+        ["src/light_compressor/decompressors/reader.pyx"],
+    ),
+    Extension(
         "light_compressor.decompressors.zstd",
         ["src/light_compressor/decompressors/zstd.pyx"],
     ),
@@ -40,7 +44,7 @@ extensions = [
 
 setup(
     name="light_compressor",
-    version="0.1.0.dev4",
+    version="0.1.0.dev5",
     package_dir={"": "src"},
     ext_modules=cythonize(extensions, language_level="3"),
     rust_extensions=[

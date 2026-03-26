@@ -1,5 +1,14 @@
 # Version History
 
+## 0.1.0.dev5
+
+* Developer release (not public to pip)
+* Add LimitedReader class for read S3File PGPack and CSVPack
+* Fix SNAPCompressor work with empty bytes_data
+* Fix SNAPDecompressor work with empty bytes_data
+* Fix ZSTDCompressor work with empty bytes_data
+* Refactor *.pyi code
+
 ## 0.1.0.dev4
 
 * Developer release (not public to pip)

@@ -1,20 +1,19 @@
-
-
 class ZSTDDecompressor:
     """ZSTD frame cython decompressor."""
+
+    _dctx: object
+    eof: bool
+    needs_input: bool
+    unused_data: bytes
+    _unconsumed_data: bytes
+    _return_bytearray: bool
+    _in_buffer: object
+    _input_buffer: object
+    _input_data: object
 
     def __init__(self) -> None:
         """Class initialization."""
 
-        self._dctx: object
-        self.eof: bool
-        self.needs_input: bool
-        self.unused_data: bytes
-        self._unconsumed_data: bytes
-        self._return_bytearray: bool
-        self._in_buffer: object
-        self._input_buffer: object
-        self._input_data: object
         ...
 
     def __enter__(self) -> "ZSTDDecompressor":

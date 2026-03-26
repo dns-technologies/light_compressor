@@ -76,6 +76,12 @@ impl SNAPDecompressor {
 
         full_data.extend_from_slice(&input_bytes);
 
+        if full_data.is_empty() && self.decoder.is_none() {
+            self.eof = true;
+            self.needs_input = false;
+            return Ok(PyBytes::new(py, &[]).into());
+        }
+
         if self.decoder.is_none() {
             if full_data.is_empty() {
                 self.needs_input = true;
@@ -122,7 +128,12 @@ impl SNAPDecompressor {
                         break;
                     }
                 }
-                Err(_) => {
+                Err(e) => {
+                    if result.is_empty() {
+                        self.eof = true;
+                        self.needs_input = false;
+                        return Ok(PyBytes::new(py, &[]).into());
+                    }
                     self.eof = true;
                     self.needs_input = false;
                     break;
