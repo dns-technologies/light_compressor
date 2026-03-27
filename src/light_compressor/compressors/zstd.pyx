@@ -136,7 +136,7 @@ cdef class ZSTDCompressor:
     ):
         """Generate compressed chunks from bytes chunks."""
 
-        cdef list chunk_result, end_result, compressed_chunks = []
+        cdef list compressed_chunks = []
         cdef bytes data_chunk
         cdef unsigned long long data_chunk_size
         cdef bint has_data = False
@@ -169,32 +169,28 @@ cdef class ZSTDCompressor:
                 raise ValueError(
                     f"Empty frame compression error: {error_name}",
                 )
-            
+
             empty_frame = bytes(ffi.buffer(out_buffer, compressed_size))
-            compressed_chunks.append(empty_frame)
-            yield b"".join(compressed_chunks)
+            yield empty_frame
             lib.ZSTD_freeCCtx(self.context)
             return
 
         data_chunk_size = self._setup_input_buffer(first)
         self.decompressed_size += data_chunk_size
         self._setup_buffers(data_chunk_size)
-        chunk_result = self._compress_stream(lib.ZSTD_e_continue)
-        compressed_chunks.extend(chunk_result)
+
+        for chunk in self._compress_stream(lib.ZSTD_e_continue):
+            yield chunk
 
         for data_chunk in iterator:
-            if len(compressed_chunks) > 128:
-                yield b"".join(compressed_chunks)
-                compressed_chunks.clear()
-
             data_chunk_size = self._setup_input_buffer(data_chunk)
             self.decompressed_size += data_chunk_size
             self._setup_buffers(data_chunk_size)
-            chunk_result = self._compress_stream(lib.ZSTD_e_continue)
-            compressed_chunks.extend(chunk_result)
 
-        end_result = self._end_compression()
-        compressed_chunks.extend(end_result)
+            for chunk in self._compress_stream(lib.ZSTD_e_continue):
+                yield chunk
 
-        yield b"".join(compressed_chunks)
+        for chunk in self._end_compression():
+            yield chunk
+
         lib.ZSTD_freeCCtx(self.context)

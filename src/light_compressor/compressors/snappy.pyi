@@ -1,4 +1,4 @@
-from collections.abc import Generator
+from collections.abc import Iterator
 from typing import Iterable
 
 from .levels import DEFAULT_COMPRESSION
@@ -6,9 +6,6 @@ from .levels import DEFAULT_COMPRESSION
 
 class SNAPCompressor:
     """Snappy chunk compressor."""
-
-    compression_level: int
-    decompressed_size: int
 
     def __init__(
         self,
@@ -18,10 +15,27 @@ class SNAPCompressor:
 
         ...
 
+    @property
+    def compression_level(self) -> int:
+        """Get compressor level value."""
+
+        ...
+
+    @property
+    def decompressed_size(self) -> int:
+        """Get decompressed size."""
+
+        ...
+
     def send_chunks(
         self,
         bytes_data: Iterable[bytes],
-    ) -> Generator[bytes, None, None]:
+    ) -> Iterator[bytes]:
         """Generate compressed chunks from bytes chunks."""
+
+        ...
+
+    def create_empty_frame(self) -> bytes:
+        """Create snappy header."""
 
         ...

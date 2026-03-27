@@ -6,7 +6,13 @@ from .compression_method import (
     auto_detector,
     CompressionMethod,
 )
-from .decompressors import DecompressReader
+from .decompressors import (
+    DecompressReader,
+    SnappyReader,
+)
+
+
+READER = {CompressionMethod.SNAPPY: SnappyReader}
 
 
 def define_reader(
@@ -21,5 +27,8 @@ def define_reader(
     if compressor_method is CompressionMethod.NONE:
         return fileobj
 
-    raw = DecompressReader(fileobj, compressor_method.decompressor)
+    raw = READER.get(compressor_method, DecompressReader)(
+        fileobj,
+        compressor_method.decompressor,
+    )
     return BufferedReader(raw)

@@ -1,5 +1,6 @@
 from collections.abc import (
     Generator,
+    Iterator,
     Iterable,
 )
 from typing import (
@@ -18,7 +19,7 @@ class CompressorType(Protocol):
     def send_chunks(
         self,
         bytes_data: Iterable[bytes],
-    ) -> Generator[bytes, None, None]:
+    ) -> Generator[bytes, None, None] | Iterator[bytes]:
         """Generate compressed chunks from bytes chunks."""
         ...
 

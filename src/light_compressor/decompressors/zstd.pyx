@@ -4,6 +4,9 @@ from zstandard._cffi import (
 )
 
 
+cdef long BUFFER = 65536
+
+
 cdef class ZSTDDecompressor:
     """ZSTD frame cython decompressor."""
 
@@ -77,20 +80,17 @@ cdef class ZSTDDecompressor:
         cdef object out_buffer, out_data, input_cdata
         cdef size_t output_size
         cdef unsigned long long decompressed_size
+        cdef list result_parts = []
+        cdef size_t total_decompressed = 0
+        cdef size_t last_pos
 
         if max_length == -1:
-            output_size = lib.ZSTD_DStreamOutSize()
+            output_size = BUFFER
         else:
             if max_length > 0:
                 output_size = max_length
             else:
-                output_size = lib.ZSTD_DStreamOutSize()
-
-        out_data = ffi.new("char[]", output_size)
-        out_buffer = ffi.new("ZSTD_outBuffer *")
-        out_buffer.dst = out_data
-        out_buffer.size = output_size
-        out_buffer.pos = 0
+                output_size = BUFFER
 
         if data.__class__ not in (bytes, bytearray):
             data = memoryview(data).tobytes()
@@ -111,33 +111,56 @@ cdef class ZSTDDecompressor:
             self._in_buffer.pos = 0
             self._input_data = None
 
-        decompressed_size = lib.ZSTD_decompressStream(
-            self._dctx,
-            out_buffer,
-            self._in_buffer,
-        )
+        last_pos = 0
 
-        if lib.ZSTD_isError(decompressed_size):
-            raise RuntimeError("ZSTD decompression error")
+        while True:
+            out_data = ffi.new("char[]", output_size)
+            out_buffer = ffi.new("ZSTD_outBuffer *")
+            out_buffer.dst = out_data
+            out_buffer.size = output_size
+            out_buffer.pos = 0
+            decompressed_size = lib.ZSTD_decompressStream(
+                self._dctx,
+                out_buffer,
+                self._in_buffer,
+            )
 
-        if self._in_buffer.pos < self._in_buffer.size:
-            if data:
-                remaining_data = data[self._in_buffer.pos:]
-            else:
-                remaining_data = b""
+            if lib.ZSTD_isError(decompressed_size):
+                if self._in_buffer.pos < self._in_buffer.size:
+                    self.unused_data = data[self._in_buffer.pos:] if data else b""
+                    self._unconsumed_data = b""
+                self.eof = True
+                self.needs_input = False
+                break
+
+            if out_buffer.pos > 0:
+                result_parts.append(ffi.buffer(out_data, out_buffer.pos)[:])
+                total_decompressed += out_buffer.pos
 
             if decompressed_size == 0:
-                self.unused_data = remaining_data
-                self._unconsumed_data = b""
-            else:
-                self._unconsumed_data = remaining_data
-                self.unused_data = b""
+                if self._in_buffer.pos < self._in_buffer.size:
+                    self.unused_data = data[self._in_buffer.pos:] if data else b""
+                    self._unconsumed_data = b""
+                else:
+                    self.unused_data = b""
+                    self._unconsumed_data = b""
+                self.eof = True
+                self.needs_input = False
+                break
 
-            self.needs_input = False
-        else:
-            self._unconsumed_data = b""
-            self.unused_data = b""
-            self.needs_input = True
+            if max_length != -1 and total_decompressed >= max_length:
+                if self._in_buffer.pos < self._in_buffer.size:
+                    self._unconsumed_data = data[self._in_buffer.pos:] if data else b""
+                self.needs_input = False
+                break
 
-        self.eof = (decompressed_size == 0)
-        return ffi.buffer(out_data, out_buffer.pos)[:]
+            if self._in_buffer.pos >= self._in_buffer.size:
+                self.needs_input = True
+                break
+
+        result = b"".join(result_parts)
+
+        if max_length != -1 and len(result) > max_length:
+            result = result[:max_length]
+
+        return result

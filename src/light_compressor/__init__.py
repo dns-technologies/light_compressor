@@ -17,6 +17,7 @@ from .decompressors import (
     LimitedReader,
     LZ4Decompressor,
     SNAPDecompressor,
+    SnappyReader,
     ZSTDDecompressor,
 )
 from .reader import define_reader
@@ -40,10 +41,11 @@ __all__ = (
     "LZ4Decompressor",
     "SNAPCompressor",
     "SNAPDecompressor",
+    "SnappyReader",
     "ZSTDCompressor",
     "ZSTDDecompressor",
     "auto_detector",
     "define_reader",
     "define_writer",
 )
-__version__ = "0.1.0.dev5"
+__version__ = "0.1.1.dev0"

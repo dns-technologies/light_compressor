@@ -27,31 +27,15 @@ cdef class LZ4Compressor:
     ):
         """Generate compressed chunks from bytes chunks."""
 
-        cdef list compressed_chunks = []
-        cdef bytes data_chunk, compressed
-        self.decompressed_size = 0
+        cdef bytes data_chunk
 
-        compressed = compress_begin(
+        yield compress_begin(
             self.context,
             compression_level=self.compression_level,
         )
-        compressed_chunks.append(compressed)
 
         for data_chunk in bytes_data:
-            if len(compressed_chunks) > 128:
-                yield b"".join(compressed_chunks)
-                compressed_chunks.clear()
-
+            yield compress_chunk(self.context, data_chunk)
             self.decompressed_size += len(data_chunk)
-            compressed = compress_chunk(self.context, data_chunk)
 
-            if compressed:
-                compressed_chunks.append(compressed)
-
-        compressed = compress_flush(self.context)
-
-        if compressed:
-            compressed_chunks.append(compressed)
-
-        if compressed_chunks:
-            yield b"".join(compressed_chunks)
+        yield compress_flush(self.context)

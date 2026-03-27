@@ -3,17 +3,17 @@ import random
 import time
 
 from light_compressor import (
-    SNAPCompressor,
-    SNAPDecompressor,
+    ZSTDCompressor,
+    ZSTDDecompressor,
 )
 
 
-Compressor = SNAPCompressor
-Decompressor = SNAPDecompressor
+Compressor = ZSTDCompressor
+Decompressor = ZSTDDecompressor
 
 
-class TestSNAPCompressor:
-    """Тесты для компрессора Snappy."""
+class TestZSTDCompressor:
+    """Тесты для компрессора Zstd."""
 
     def test_compress_empty_data(self):
         """Тест сжатия пустых данных."""
@@ -22,7 +22,7 @@ class TestSNAPCompressor:
         chunks = list(compressor.send_chunks([]))
         assert len(chunks) == 1  # noqa: S101
         assert len(chunks[0]) > 0  # noqa: S101
-        assert chunks[0][:4] == b"\xff\x06\x00\x00"  # noqa: S101
+        assert chunks[0][:4] == b"(\xb5/\xfd"  # noqa: S101
         decompressor = Decompressor()
         result = decompressor.decompress(chunks[0])
         assert result == b""  # noqa: S101
@@ -72,16 +72,6 @@ class TestSNAPCompressor:
         assert decompressed == b"test" * 10000  # noqa: S101
         assert decompressor.eof is True  # noqa: S101
 
-    def test_compression_level(self):
-        """Тест, что параметр compression_level принимается и игнорируется."""
-
-        compressor1 = Compressor(compression_level=1)
-        compressor2 = Compressor(compression_level=9)
-        test_data = b"Hello, World! " * 1000
-        chunks1 = list(compressor1.send_chunks([test_data]))
-        chunks2 = list(compressor2.send_chunks([test_data]))
-        assert b"".join(chunks1) == b"".join(chunks2)  # noqa: S101
-
     def test_decompressed_size(self):
         """Тест подсчета размера исходных данных."""
 
@@ -92,6 +82,7 @@ class TestSNAPCompressor:
 
     def test_large_data(self):
         """Тест обработки больших данных (1MB)."""
+
         compressor = Compressor()
         test_data = bytes(random.randint(0, 255) for _ in range(1024 * 1024))  # noqa: S311
         compressed_chunks = list(compressor.send_chunks([test_data]))
@@ -173,8 +164,8 @@ class TestSNAPCompressor:
         print("✓ Debug test passed")
 
 
-class TestSNAPDecompressor:
-    """Тесты для декомпрессора Snappy."""
+class TestZSTDDecompressor:
+    """Тесты для декомпрессора Zstd."""
 
     def test_decompress_empty(self):
         """Тест декомпрессии пустых данных."""
@@ -194,18 +185,6 @@ class TestSNAPDecompressor:
         compressed_data = b"".join(compressed)
         decompressor = Decompressor()
         decompressed = decompressor.decompress(compressed_data)
-        assert decompressed == test_data  # noqa: S101
-        assert decompressor.eof is True  # noqa: S101
-
-    def test_decompress_raw_format(self):
-        """Тест декомпрессии raw формата (без фреймов)."""
-
-        import snappy as snappy_lib  # Требуется установить python-snappy
-
-        test_data = b"Test raw format data " * 100
-        raw_compressed = snappy_lib.compress(test_data)
-        decompressor = SNAPDecompressor()
-        decompressed = decompressor.decompress(raw_compressed)
         assert decompressed == test_data  # noqa: S101
         assert decompressor.eof is True  # noqa: S101
 
@@ -293,7 +272,7 @@ class TestSNAPDecompressor:
             assert result == test_data  # noqa: S101
 
 
-class TestSNAPPYIntegration:
+class TestZSTDIntegration:
     """Интеграционные тесты."""
 
     def test_compress_decompress_cycle_with_random_data(self):
@@ -324,21 +303,6 @@ class TestSNAPPYIntegration:
         compressed_data = b"".join(compressed_chunks)
         decompressed = decompressor.decompress(compressed_data)
         assert decompressed == large_data  # noqa: S101
-
-    def test_compression_ratio(self):
-        """Тест коэффициента сжатия."""
-
-        compressor = Compressor()
-        repetitive_data = b"A" * 100000
-        compressed_repetitive = list(compressor.send_chunks([repetitive_data]))
-        repetitive_ratio = len(b"".join(compressed_repetitive)) / len(
-            repetitive_data
-        )
-        assert repetitive_ratio < 0.2  # noqa: S101
-        random_data = bytes(random.randint(0, 255) for _ in range(100000))  # noqa: S311
-        compressed_random = list(compressor.send_chunks([random_data]))
-        random_ratio = len(b"".join(compressed_random)) / len(random_data)
-        assert random_ratio > 0.9  # noqa: S101
 
     def test_performance(self):
         """Тест производительности сжатия/декомпрессии."""

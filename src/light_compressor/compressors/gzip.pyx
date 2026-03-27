@@ -28,25 +28,10 @@ cdef class GZIPCompressor:
     ):
         """Generate compressed chunks from bytes chunks."""
 
-        cdef list compressed_chunks = []
-        cdef bytes data_chunk, compressed
-        self.decompressed_size = 0
+        cdef bytes data_chunk
 
         for data_chunk in bytes_data:
-            if len(compressed_chunks) > 128:
-                yield b"".join(compressed_chunks)
-                compressed_chunks.clear()
-
+            yield self.context.compress(data_chunk)
             self.decompressed_size += len(data_chunk)
-            compressed = self.context.compress(data_chunk)
 
-            if compressed:
-                compressed_chunks.append(compressed)
-
-        compressed = self.context.flush()
-
-        if compressed:
-            compressed_chunks.append(compressed)
-
-        if compressed_chunks:
-            yield b"".join(compressed_chunks)
+        yield self.context.flush()

@@ -1,10 +1,6 @@
 class SNAPDecompressor:
     """Snappy frame rust decompressor."""
 
-    eof: bool
-    needs_input: bool
-    unused_data: bytes
-    _unconsumed_data: bytes
     _return_bytearray: bool
 
     def __init__(self) -> None:
@@ -36,3 +32,12 @@ class SNAPDecompressor:
     ) -> bytes:
         """Decompresses part or all of a Snappy frame of compressed data."""
         ...
+
+    @property
+    def eof(self) -> bool: ...
+    @property
+    def needs_input(self) -> bool: ...
+    @property
+    def unused_data(self) -> bytes: ...
+    @property
+    def _unconsumed_data(self) -> bytes: ...

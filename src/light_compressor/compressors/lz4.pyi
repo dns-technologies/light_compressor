@@ -15,6 +15,7 @@ class LZ4Compressor:
         self,
         compression_level: int = DEFAULT_COMPRESSION,
     ) -> None:
+        """Class initialization."""
 
         ...
 

@@ -1,5 +1,23 @@
 # Version History
 
+## 0.1.1.dev0
+
+* Developer release (not public to pip)
+* Refactor compressors and decompressors code
+* Remove accumulate buffer compressor after send chunks
+* Change pyo3 revision to 0.28.2
+* New core snappy compressor/decompressor
+* Add SnappyReader for read decompressed data
+* Refactor DecompressReader
+* Refactor define_reader() function
+* Refactor CompressorType type annotation
+* New tests for all compressors/decompressors
+* Full support stream mode for Snappy Framed compress
+* Snappy Decoder now support both modes (Framed and Raw)
+* Speed-up for compress/decompress operations
+* Fix read errors for LZ4Decompressor
+* Fix read errors for ZSTDDecompressor
+
 ## 0.1.0.dev5
 
 * Developer release (not public to pip)
