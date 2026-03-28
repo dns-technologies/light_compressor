@@ -1,5 +1,14 @@
 # Version History
 
+## 0.1.1.dev1
+
+* Developer release (not public to pip)
+* Decompose code
+* Refactor *.pyi
+* Refactor CompressorType
+* Refactor DecompressorType
+* Improve docstrings
+
 ## 0.1.1.dev0
 
 * Developer release (not public to pip)

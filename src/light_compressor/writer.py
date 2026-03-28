@@ -4,11 +4,13 @@ from collections.abc import (
 )
 from typing import TYPE_CHECKING
 
-from .compression_method import CompressionMethod
-from .compressors import CompressionLevel
+from .common import (
+    CompressionLevel,
+    CompressionMethod,
+)
 
 if TYPE_CHECKING:
-    from .types import CompressorType
+    from .common.types import CompressorType
 
 
 def define_writer(

@@ -2,11 +2,11 @@
 
 from io import BufferedReader
 
-from .compression_method import (
+from .common.methods import (
     auto_detector,
     CompressionMethod,
 )
-from .decompressors import (
+from .openers import (
     DecompressReader,
     SnappyReader,
 )

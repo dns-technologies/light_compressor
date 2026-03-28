@@ -1,6 +1,5 @@
-"""Simple stream readers for compressed buffers."""
+"""Simple stream compressors."""
 
-from . import levels as CompressionLevel
 from .gzip import GZIPCompressor
 from .lz4 import LZ4Compressor
 from .snappy import SNAPCompressor
@@ -8,7 +7,6 @@ from .zstd import ZSTDCompressor
 
 
 __all__ = (
-    "CompressionLevel",
     "GZIPCompressor",
     "LZ4Compressor",
     "SNAPCompressor",

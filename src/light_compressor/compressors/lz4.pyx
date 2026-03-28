@@ -5,7 +5,7 @@ from lz4.frame._frame import (
     compress_flush,
 )
 
-from light_compressor.compressors.levels import DEFAULT_COMPRESSION
+from light_compressor.common.levels import DEFAULT_COMPRESSION
 
 
 cdef class LZ4Compressor:

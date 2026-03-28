@@ -11,6 +11,7 @@ cdef class DecompressReader:
 
     cdef void _rewind(self)
 
+
 cdef class SnappyReader:
 
     cdef public object _fp
@@ -23,3 +24,18 @@ cdef class SnappyReader:
     cdef public bytes _unconsumed_data
     
     cdef void _rewind(self)
+
+
+cdef class LimitedReader:
+
+    cdef public object _reader
+    cdef public long long _limit
+    cdef public long long _read
+
+    cpdef bytes read(self, int size=*)
+    cpdef bytes readline(self, int size=*)
+    cpdef list readlines(self, int hint=*)
+    cpdef bint seekable(self)
+    cpdef bint readable(self)
+    cpdef long long tell(self)
+    cpdef void close(self)

@@ -1,6 +1,6 @@
 from zlib import compressobj
 
-from light_compressor.compressors.levels import DEFAULT_COMPRESSION
+from light_compressor.common.levels import DEFAULT_COMPRESSION
 
 
 cdef class GZIPCompressor:

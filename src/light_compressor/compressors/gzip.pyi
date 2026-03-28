@@ -1,7 +1,7 @@
 from collections.abc import Generator
 from typing import Iterable
 
-from .levels import DEFAULT_COMPRESSION
+from ..common import CompressionLevel
 
 
 class GZIPCompressor:
@@ -13,7 +13,7 @@ class GZIPCompressor:
 
     def __init__(
         self,
-        compression_level: int = DEFAULT_COMPRESSION,
+        compression_level: int = CompressionLevel.DEFAULT_COMPRESSION,
     ) -> None:
         """Class initialization."""
 

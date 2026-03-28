@@ -2,13 +2,13 @@ from enum import Enum
 from io import BufferedReader
 from typing import NamedTuple
 
-from .compressors import (
+from ..compressors import (
     GZIPCompressor,
     LZ4Compressor,
     SNAPCompressor,
     ZSTDCompressor,
 )
-from .decompressors import (
+from ..decompressors import (
     GZIPDecompressor,
     LZ4Decompressor,
     SNAPDecompressor,

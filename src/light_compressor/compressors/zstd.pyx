@@ -3,7 +3,7 @@ from zstandard._cffi import (
     lib,
 )
 
-from light_compressor.compressors.levels import DEFAULT_COMPRESSION
+from light_compressor.common.levels import DEFAULT_COMPRESSION
 
 
 cdef class ZSTDCompressor:

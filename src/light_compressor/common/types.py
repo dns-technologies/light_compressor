@@ -51,7 +51,7 @@ class DecompressorType(Protocol):
 
     def decompress(
         self,
-        data: bytes | bytearray,
+        data: bytes | bytearray | memoryview,
         max_length: int = -1,
     ) -> bytes:
         """Decompress part or all of a compressed frame."""

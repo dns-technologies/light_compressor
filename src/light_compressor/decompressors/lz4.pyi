@@ -37,7 +37,7 @@ class LZ4Decompressor:
 
     def decompress(
         self,
-        data: bytes | bytearray,
+        data: bytes | bytearray | memoryview,
         max_length: int = -1,
     ) -> bytes:
         """Decompresses part or all of an LZ4 frame of compressed data."""

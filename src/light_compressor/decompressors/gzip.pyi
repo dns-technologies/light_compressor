@@ -37,7 +37,7 @@ class GZIPDecompressor:
 
     def decompress(
         self,
-        data: bytes | bytearray,
+        data: bytes | bytearray | memoryview,
         max_length: int = -1,
     ) -> bytes:
         """Decompresses part or all of a gzip frame of compressed data."""
