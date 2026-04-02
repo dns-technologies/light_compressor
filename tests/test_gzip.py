@@ -296,7 +296,7 @@ class TestGZIPIntegration:
         chunks = []
 
         for i in range(0, len(large_data), chunk_size):
-            chunks.append(large_data[i : i + chunk_size])
+            chunks.append(large_data[i: i + chunk_size])
 
         compressed_chunks = list(compressor.send_chunks(chunks))
         compressed_data = b"".join(compressed_chunks)
