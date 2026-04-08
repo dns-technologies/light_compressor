@@ -1,6 +1,6 @@
 [package]
 name = "snappy"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2021"
 
 [lib]
@@ -8,5 +8,5 @@ name = "snappy"
 crate-type = ["cdylib"]
 
 [dependencies]
-pyo3 = { version = "0.28.2", features = ["extension-module"] }
+pyo3 = { version = "0.28.3", features = ["extension-module"] }
 snap = "1.1"

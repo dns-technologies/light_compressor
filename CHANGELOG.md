@@ -4,6 +4,7 @@
 
 * Developer release (not public to pip)
 * Change pyo3 revision to 0.28.3
+* Refactor SNAPCompressor
 
 ## 0.1.1.dev1
 

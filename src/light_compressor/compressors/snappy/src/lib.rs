@@ -15,7 +15,6 @@ struct CompressionState {
     pending: Vec<u8>,
     decompressed_size: u64,
     has_data: bool,
-    finished: bool,
 }
 
 
@@ -27,7 +26,6 @@ impl CompressionState {
             pending: Vec::new(),
             decompressed_size: 0,
             has_data: false,
-            finished: false,
         }
     }
 
