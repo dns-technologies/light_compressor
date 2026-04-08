@@ -40,7 +40,7 @@ extensions = [
 
 setup(
     name="light_compressor",
-    version="0.1.1.dev1",
+    version="0.1.1.dev2",
     package_dir={"": "src"},
     ext_modules=cythonize(extensions, language_level="3"),
     rust_extensions=[

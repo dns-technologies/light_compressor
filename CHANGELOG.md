@@ -1,5 +1,10 @@
 # Version History
 
+## 0.1.1.dev2
+
+* Developer release (not public to pip)
+* Change pyo3 revision to 0.28.3
+
 ## 0.1.1.dev1
 
 * Developer release (not public to pip)
